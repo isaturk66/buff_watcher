@@ -142,6 +142,16 @@ def generate_layout(items_data, active_alarms):
     return layout
 
 
+# --- Login ---
+
+def initial_login(driver):
+    """Navigates to the login page and waits for the user to log in."""
+    driver.get("https://buff.163.com")
+    console = Console()
+    console.print("Please log in to your account on the browser and then press Enter to continue...", style="bold yellow")
+    input()
+
+
 # --- Main Application Logic ---
 
 def main():
@@ -164,6 +174,7 @@ def main():
 
     console.print("Starting Buff Market watcher...", style="bold green")
     driver = setup_driver()
+    initial_login(driver)
 
     try:
         with Live(generate_layout(items_data, active_alarms), console=console, screen=True, auto_refresh=False) as live:
