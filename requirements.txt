@@ -1,0 +1,6 @@
+selenium
+beautifulsoup4
+rich
+toml
+playsound==1.2.2
+webdriver-manager
