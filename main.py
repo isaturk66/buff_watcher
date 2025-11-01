@@ -3,6 +3,10 @@ import time
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from rich.console import Console
@@ -30,7 +34,7 @@ def load_config(filename="config.toml"):
 def setup_driver():
     """Sets up the Selenium WebDriver."""
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
+    #options.add_argument("--headless")
     options.add_argument("--log-level=3")
     service = ChromeService(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
@@ -40,9 +44,12 @@ def fetch_html(driver, url):
     """Fetches HTML content from a URL using Selenium."""
     try:
         driver.get(url)
-        # Add a small delay for pages that load content dynamically
-        time.sleep(2)
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "tr.selling"))
+        )
         return driver.page_source
+    except TimeoutException:
+        return None
     except Exception as e:
         return None
 
